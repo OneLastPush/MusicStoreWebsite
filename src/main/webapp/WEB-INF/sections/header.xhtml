@@ -1,0 +1,65 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <!--AUTHOR: Max Page-Slowik & Frank Birikundavyi-->
+
+
+    <div class="col-xs-9 col-sm-9">
+
+        <div class="jumbotron">
+            <h1>#{msgs.projectName}</h1>
+        </div>
+       
+        <div class="row">
+                          <div class="col-xs-12 col-lg-12">
+                              <a href="#{theAds.currentAd.company}">  
+                                <h:graphicImage class="col-xs-12 col-lg-12" 
+                                                value="#{theAds.currentAd.bannerPic}"
+                                                alt="banner ad space"/>
+                              </a>
+                      </div>
+            
+            <ui:repeat var="a" value="#{mainPage.albums}">
+                <div id="albumrow" class="col-xs-6 col-lg-4">
+                    <div class="thumbnail">
+                        <h2>#{a.albumTitle}</h2>
+                        <h:graphicImage class="img-responsive" value="#{a.albumCover}" />
+                        <div class="caption">
+                            <h:link outcome="albumPage" value="#{msgs.albums}" class="btn btn-default">
+                                <f:param  value="#{a.id}"  name="albumId"/>
+                            </h:link>
+                        </div>
+                    </div>
+                </div><!--/.col-xs-6.col-lg-4-->
+            </ui:repeat>
+            
+
+        </div>
+        <h:panelGroup rendered="#{login.loggedIn}">
+        <div id="lastGenreSearchedBlock" >
+            <h1>#{msgs.lastGenreSearched}</h1>
+            <ui:repeat var="a" value="#{mainPage.findLastGenreAlbums()}">
+                <div class="col-xs-6 col-lg-4">
+                    <div class="thumbnail">
+                        <h2>#{a.albumTitle}</h2>
+                        <h:graphicImage class="img-responsive" value="#{a.albumCover}" />
+                        <div class="caption">
+                            <h:link outcome="albumPage" value="#{msgs.albums}" class="btn btn-default">
+                                <f:param  value="#{a.id}"  name="albumId"/>
+                            </h:link>
+                        </div>
+                    </div>
+                </div><!--/.col-xs-6.col-lg-4-->
+                
+            </ui:repeat>
+            
+        </div>
+        </h:panelGroup>
+
+      
+    </div>
+
+
+</ui:composition>

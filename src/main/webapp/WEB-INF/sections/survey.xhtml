@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <div class="col-xs-8 col-lg-4">
+        <div class="thumbnail">
+            <h:form id="form">
+                <p:panel id="surveyPanel" rendered="#{surveyAction.renderedSurvey}">
+                    <h3>#{theSurveys.currentSurveyQuestion.question}</h3>
+                    <p:selectOneRadio id="surveySelect" layout="pageDirection" value="#{surveyAction.selectedChoice}" converter="pickListEntityConverter" > 
+                        <f:selectItems id="surveyItems" var="choices" value="#{theSurveys.currentSurveyQuestion.surveyChoicesList}" itemLabel="#{choices.choice}" />
+                    </p:selectOneRadio>
+                    <p:commandButton id="voteBtn" class="btn btn-primary btn-sm" value="#{msgs.vote}" action="#{surveyAction.increment()}" >
+                        <f:ajax render="@form" delay="1000" listener="#{surveyAction.createHorizontalBarModel}" />
+                    </p:commandButton>
+                </p:panel>
+                <p:panel id="chartPanel" rendered="#{surveyAction.rendered}">
+                    <p:chart id="surveyChart" type="bar" responsive="true" model="#{surveyAction.horizontalBarModel}" />
+                    <!--<p:poll interval="3" update=":form:surveyChart"/>-->
+                </p:panel>
+            </h:form>
+        </div>
+    </div>
+</ui:composition>
+

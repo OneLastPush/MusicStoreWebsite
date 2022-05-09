@@ -1,0 +1,78 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!--AUTHOR: Frank Birikundavyi-->
+    <div class="container">
+        <div id="demo">
+            <h1>#{msgs.songTitle}</h1>
+            <hr/>
+            <ui:repeat var="t" value="#{songBacking.getSong(param['songId'])}">
+                <h:button outcome="#{reviewView.redirectToAlbumPage(t.albumId.id)}" value="#{msgs.goBackAlbumPage}"  class="btn btn-primary"/>
+
+                <br/>
+                <br/>
+                #{reviewView.setSong(t)}
+                <div id="descTrackBox" class="clearfix float-my-children">
+                    <span class="helper"></span><img  class="vertical-middle coverSmall" src="#{t.albumId.albumCover}"></img>
+
+                    <div id="descBox" class="clear">
+                        <h1 class="trackInfo">#{t.trackTitle} </h1><hr/>
+                        <h5 class="trackInfo">#{msgs.ArtistLabel} : #{t.artistId.artist}</h5>
+                        <h5 class="trackInfo">#{msgs.genreHead} #{t.genreId.genreName}</h5>
+                        <h5 class="trackInfo">#{msgs.TimeLabel} : #{album.formatTime(t.songLength)}</h5>
+                        <h5 class="trackInfo">#{msgs.PriceLabel} : #{album.getCurrentPrice(t.salePrice.toPlainString(), t.listPrice.toPlainString())}</h5>
+                        <p:commandButton value="#{msgs.BuyLabel}" actionListener="#{checkout.addItem(t)}" class="btn btn-primary"/>
+                    </div>
+                </div>
+                <hr/>
+                <div id="buyFullAlbumBox">
+                </div>
+                <br/><br/>
+                <div class="table-responsive-vertical shadow-z-1">
+                    <table id="table" class="table table-hover table-mc-light-blue">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>#{msgs.nameLabel}</th>
+                                <th>#{msgs.ArtistLabel}</th>
+                                <th>#{msgs.TimeLabel}</th>
+                                <th>#{msgs.PriceLabel}</th>
+                                <th>#{msgs.BuyLabel}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat var="s" value="#{t.albumId.songsList}">
+                                <tr class='' data-href="#{songBacking.getToSongPage(s)}">
+                                    <td >#{s.trackNumber}</td>
+                                    <td data-title="#{msgs.nameLabel}"><h:link outcome="songPage" value="#{s.trackTitle}">
+                                            <f:param value="#{s.id}" name="songId"/>
+                                        </h:link></td>
+                                    <td data-title="#{msgs.ArtistLabel}">
+                                        #{s.artistId.artist}
+                                    </td>
+                                    <td data-title="#{msgs.TimeLabel}">#{album.formatTime(s.songLength)}</td>
+
+                                    <td data-title="#{msgs.PriceLabel}">#{album.getCurrentPrice(s.salePrice.toPlainString(), s.listPrice.toPlainString())}</td>
+                                    <td data-title="#{msgs.BuyLabel}">
+                                        <h:form>
+                                            <p:commandButton value="#{msgs.BuyLabel}" actionListener="#{checkout.addItem(song)}" class="btn btn-primary"/>
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </ui:repeat>
+        </div>  
+    </div>
+   
+
+</ui:composition>

@@ -1,0 +1,130 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui">
+
+    <!--AUTHOR: Max Page-Slowik-->
+    <div class="container">
+
+
+        <h:form class="form-signin">
+            <p:growl id="error"/>
+            <h2 class="form-signin-heading"><h:outputText  value="#{msgs.register}"/></h2>
+            <b:panelGrid id="panel" columns="2" >
+                <b:panel style = "display:block; text-align:center">
+                    <div class="form-group">
+                        <h:selectOneMenu class="form-control" value="#{register.title}">
+                            <f:selectItem itemValue="Mr." itemLabel="Mr." />
+                            <f:selectItem itemValue="Mrs." itemLabel="Mrs." />
+                            <f:selectItem itemValue="Dr." itemLabel="Dr." />
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText required="true" value="#{register.fname}" pt:placeholder="#{msgs.fname}" class="form-control"
+                                     requiredMessage="#{msgs.fnameReq}">
+                            <f:validateLength maximum="100" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText required="true" value="#{register.lname}" pt:placeholder="#{msgs.lname}" class="form-control"
+                                     requiredMessage="#{msgs.lnameReq}">
+                            <f:validateLength maximum="100" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText required="true" value="#{register.address1}" pt:placeholder="#{msgs.addressLine1}" class="form-control"
+                                     requiredMessage="#{msgs.addrReq}">
+                            <f:validateLength maximum="100" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText value="#{register.address2}" pt:placeholder="#{msgs.addressLine2}" class="form-control">
+                            <f:validateLength maximum="100" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText required="true" value="#{register.city}" pt:placeholder="#{msgs.city}" class="form-control"
+                                     requiredMessage="#{msgs.cityReq}">
+                            <f:validateLength maximum="100" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+
+                        <h:selectOneMenu  class="form-control" value="#{register.province}">
+                            <f:selectItem itemValue="Quebec" itemLabel="QC" />
+                            <f:selectItem itemValue="Ontario" itemLabel="ON" />
+                            <f:selectItem itemValue="Manitoba" itemLabel="MB" />
+                            <f:selectItem itemValue="Saskatchewan" itemLabel="SK" />
+                            <f:selectItem itemValue="Alberta" itemLabel="AB" />
+                            <f:selectItem itemValue="British Colombia" itemLabel="BC" />
+                            <f:selectItem itemValue="Nova Scotia" itemLabel="NS" />
+                            <f:selectItem itemValue="New Brunswick" itemLabel="NB" />
+                            <f:selectItem itemValue="Newfoundland and Labrador" itemLabel="NL" />
+                            <f:selectItem itemValue="Prince Edward Island" itemLabel="PE" />
+                            <f:selectItem itemValue="Northwest Territories" itemLabel="NT" />
+                            <f:selectItem itemValue="Nunavut" itemLabel="NU" />
+                            <f:selectItem itemValue="Yukon" itemLabel="YK" />
+
+                        </h:selectOneMenu>
+                    </div>
+                </b:panel>
+                <!--seperate to panel-->
+                <b:panel  style = "display:block; text-align:center">
+                    <div class="form-group">
+                        <h:selectOneMenu  class="form-control" value="#{register.country}">
+                            <f:selectItem itemValue="Canada" itemLabel="Canada" />
+
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText id="postalcode" required="true" value="#{register.postalCode}" pt:placeholder="#{msgs.postalCode}" class="form-control"
+                                     requiredMessage="#{msgs.postalReq}" validatorMessage="#{msgs.postalErr}">
+
+                            <f:converter converterId="com.convert.PostalCode" />
+
+                            <f:validateRegex pattern="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"/>
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <p:inputMask value="#{register.home}" pt:placeholder="#{msgs.homeNum}" class="form-control" mask="(999) 999-9999">
+                            <f:validator validatorId="com.trouble.PhoneNumberValidator"/>
+                        </p:inputMask>
+                    </div>
+                    <div class="form-group">
+                        <p:inputMask value="#{register.cell}" pt:placeholder="#{msgs.cellNum}" class="form-control" mask="(999) 999-9999"/>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText value="#{register.email}" pt:type="email" 
+                                     pt:placeholder="#{msgs.email}" class="form-control" required="true"
+                                     requiredMessage="#{msgs.emailReq}">
+                            <f:validator binding="#{emailValidator}" />
+                            <f:validateLength maximum="255" />
+                        </h:inputText>
+                    </div>
+                    <div class="form-group">
+                        <h:inputText id="password" required="true" value="#{register.password}" pt:type="password"
+                                     pt:placeholder="#{msgs.password}" class="form-control"
+                                     requiredMessage="#{msgs.passReq}">
+                            <f:validateLength maximum="255" />
+                        </h:inputText>
+                    </div>
+
+                </b:panel>
+            </b:panelGrid>
+            <div id="regErrorArea">
+                <!--<h:message styleClass="errorMessage"/>-->
+            </div>
+            <div id="regFormButton">
+                <h:commandButton action="#{register.registerUser()}"   value="#{msgs.register}" class="btn btn-lg btn-primary btn-block btn-signin" />
+
+                <h:link value="#{msgs.login}" outcome="loginpage"></h:link>
+            </div>
+        </h:form>
+
+    </div>    
+
+</ui:composition>

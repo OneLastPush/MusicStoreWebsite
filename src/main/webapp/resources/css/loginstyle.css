@@ -1,0 +1,52 @@
+.errorMessage{
+    color:red;
+    font-size: 12pt;
+}
+
+#footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#login{
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    transform: translate(0%, -50%);
+}
+
+.form-signin {
+
+
+    max-width: 50%;
+    padding: 15px 35px 45px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.1);  
+
+
+
+    .form-signin-heading,
+
+    .form-control {
+        position: relative;
+        font-size: 16px;
+        height: auto;
+        padding: 10px;
+
+    }
+
+    input[type="text"] {
+        margin-bottom: -1px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    input[type="password"] {
+        margin-bottom: 20px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+}

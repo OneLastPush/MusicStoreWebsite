@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--AUTHOR: Max Page-Slowik-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view locale="#{localeBean.locale}">
+    <h:head>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>#{msgs.register}></title>
+
+        <h:outputStylesheet library="webjars" name="bootstrap/3.3.7-1/css/bootstrap.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="bootstrap/3.3.7-1/css/bootstrap-theme.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+        <h:outputStylesheet library="css" name="registerstyle.css" />
+        
+    </h:head>
+
+    <h:body>
+        <!-- Control-Shift x -->
+        <ui:debug hotkey="x"
+                  rendered="#{initParam['javax.faces.PROJECT_STAGE'] eq 'Development'}" />
+
+        
+        <div id="menu">
+            <ui:insert name="menu">
+                <ui:include src="../sections/menu.xhtml" />
+            </ui:insert>
+        </div>
+        
+        <div id="register">
+            <ui:insert name="register">
+                <ui:include src="../sections/register.xhtml" />
+            </ui:insert>
+        </div>
+        
+
+            <div id="footer">
+                <ui:insert name="footer">
+                    <ui:include src="../sections/footer.xhtml" />
+                </ui:insert>
+            </div>
+        
+        <ui:debug />
+
+        <!-- load js at bottom for faster loading-->
+        <h:outputScript library="webjars" name="jquery/3.1.1-1/jquery.min.js"/>
+        <h:outputScript library="webjars" name="bootstrap/3.3.7-1/js/bootstrap.min.js" />
+
+    </h:body>
+</f:view>
+</html>

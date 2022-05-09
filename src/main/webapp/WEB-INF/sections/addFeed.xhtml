@@ -1,0 +1,25 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <!-- Author: Seaim Khan -->
+    <h:form id="form">
+        <p:panel id="panel" header="#{msgs.addFeedHead}" style="text-align: center">
+            <h:panelGrid id="addFeedGrid" columns="4" style="width: 30%; text-align: center">
+                <p:outputLabel for="feedLink" value="#{msgs.feedLink}" />
+                <p:inputText id="feedLink" required="true" type="text" value="#{rss.feed}">
+                    <f:validateRegex pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&amp;//=]*)" />
+                    <f:validateLength maximum="255" />
+                    <f:validator binding="#{feedValidator}" />
+                </p:inputText>
+                <p:message for="feedLink" />
+                <p:commandButton value="#{msgs.addBtn}" action="#{rss.createFeed()}" />
+            </h:panelGrid>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"/>
+        <p:growl id="messages" showDetail="true" />
+    </h:form>
+</ui:composition>

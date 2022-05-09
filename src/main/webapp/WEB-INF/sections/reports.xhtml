@@ -1,0 +1,321 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <!--Reports tab-->
+    <!--AUTHOR: Dimitri Spyropoulos -->
+    <h:form>
+        <p:commandButton id="reportsTableBtn" value="#{msgs.reports}" type="button" />
+        <p:overlayPanel id="dataPanel" for="reportsTableBtn" hideEffect="fade" dynamic="true" dismissable = "false">
+            <p:tabView>
+                <p:tab title="#{msgs.totalSales}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/> 
+                        <br/>                      
+                        <p:dataTable value="#{invoicesJpaController.getSales(report.calendar1, report.calendar2)}" styleClass="table" rows="1"> 
+                            <p:column headerText="#{msgs.totalSales}">
+                                <h:outputText value="$#{invoicesJpaController.getSales(report.calendar1, report.calendar2)}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.totalCost}">
+                                <h:outputText value="$#{invoicesJpaController.getTotalCost(report.calendar1, report.calendar2)}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.totalProfit}">
+                                <h:outputText value="$#{invoicesJpaController.getProfit(report.calendar1, report.calendar2)}" />   
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.salesByClient}">  
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="clientId" value="#{msgs.clientID}" />
+                        <p:inputNumber id="clientId" value="#{report.id}" decimalPlaces="0" required="true">
+                             <p:ajax event="change" update="@form" />
+                        </p:inputNumber>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/> 
+                        <br/>   
+                        <p:dataTable value="#{invoicesJpaController.getSalesByClient(report.id, report.calendar1, report.calendar2)}" var="client" styleClass="table" rows="2"> 
+                            <p:column headerText="#{msgs.clientName}">
+                                <h:outputText value="#{usersJpaController.findUsers(report.id).lname != null ? usersJpaController.findUsers(report.id).fname.concat(' ').concat(usersJpaController.findUsers(report.id).lname) : msgs.noRecordFound}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{client}" />   
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.salesByArtist}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="artistId" value="#{msgs.artistID}" />
+                        <p:inputNumber id="artistId" value="#{report.id}" decimalPlaces="0" required="true">
+                             <p:ajax event="change" update="@form" />
+                        </p:inputNumber>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/> 
+                        <br/> 
+                        <p:dataTable value="#{invoicesJpaController.getSalesByArtist(report.id, report.calendar1, report.calendar2)}" var="artist" styleClass="table" rows="2"> 
+                            <p:column headerText="#{msgs.artistName}">
+                                <h:outputText value="#{artistsJpaController.findArtists(report.id).artist != null ? artistsJpaController.findArtists(report.id).artist: msgs.noRecordFound}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{artist}" />   
+                            </p:column>
+                        </p:dataTable>  
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.salesByTrack}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="inventoryId" value="#{msgs.inventoryID}" />
+                        <p:inputNumber id="inventoryId" value="#{report.id}" decimalPlaces="0" required="true">
+                             <p:ajax event="change" update="@form" />
+                        </p:inputNumber>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{invoiceDetailsSongsJpaController.getSalesByTrack(report.id, report.calendar1, report.calendar2)}" var="item" styleClass="table" rows="2"> 
+                            <p:column headerText="#{msgs.trackName}">
+                                <h:outputText value="#{songsJpaController.findSongs(report.id).trackTitle != null ? songsJpaController.findSongs(report.id).trackTitle : msgs.noRecordFound}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.numDownloads}">
+                                <h:outputText value="#{item[0]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.removalStatus}">
+                                <h:outputText value="#{item[2]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{item[1] != null ? item[1] : '0.00'}" /> 
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.salesByAlbum}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="albumId" value="#{msgs.albumID}" />
+                        <p:inputNumber id="albumId" value="#{report.id}" decimalPlaces="0" required="true">
+                             <p:ajax event="change" update="@form" />
+                        </p:inputNumber>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{invoiceDetailsAlbumJpaController.getSalesByAlbum(report.id, report.calendar1, report.calendar2)}" var="item" styleClass="table" rows="2"> 
+                            <p:column headerText="#{msgs.albumName}">
+                                <h:outputText value="#{albumsJpaController.findAlbums(report.id).albumTitle != null ? albumsJpaController.findAlbums(report.id).albumTitle : msgs.noRecordFound}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.numDownloads}">
+                                <h:outputText value="#{item[0]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.removalStatus}">
+                                <h:outputText value="#{item[2]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{item[1] != null ? item[1] : '0.00'}" /> 
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.topSellers}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{invoicesJpaController.getTopSellingTracks(report.calendar1, report.calendar2)}" var="aSong" paginator="true" styleClass="table" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50,100">
+                            <p:column headerText="#{msgs.trackTitle}">
+                                <h:outputText value="#{aSong[0]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.removalStatus}">
+                                <h:outputText value="#{aSong[1]}" /> 
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{aSong[2]}" /> 
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.topClients}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{usersJpaController.getTopClients(report.calendar1, report.calendar2)}" var="aClient" paginator="true" styleClass="table" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50,100">
+                            <p:column headerText="#{msgs.clientID}">
+                                <h:outputText value="#{aClient[0]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.clientName}">
+                                <h:outputText value="#{aClient[1]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.total}">
+                                <h:outputText value="$#{aClient[2]}" /> 
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.zeroTracks}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+                        
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{invoicesJpaController.getTracksWithoutSales(report.calendar1, report.calendar2)}" var="aTrack" paginator="true" styleClass="table" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50,100">
+                            <p:column headerText="#{msgs.inventoryID}">
+                                <h:outputText value="#{aTrack[0]}" />   
+                            </p:column>                           
+                            <p:column headerText="#{msgs.trackTitle}">
+                                <h:outputText value="#{aTrack[1]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.removalStatus}">
+                                <h:outputText value="#{aTrack[2]}" />   
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+
+                <p:tab title="#{msgs.zeroClients}">
+                    <h:form>
+                        <p:outputLabel for="buttonCal1" value="#{msgs.startDate}" />
+                        <p:calendar id="buttonCal1" value="#{report.calendar1}" showOn="button" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="buttonCal2" value="#{msgs.endDate}" />
+                        <p:calendar id="buttonCal2" value="#{report.calendar2}" showOn="button" mindate="#{report.calendar1}" required="true">
+                            <p:ajax event="change" update="@form"/>
+                            <p:ajax event="dateSelect" update="@form"/>
+                        </p:calendar>
+                        <p:commandButton value="#{msgs.submitBtn}"/>
+                        
+                        <br/>   
+                        <br/>  
+                        <p:dataTable value="#{usersJpaController.getClientsWithoutPurchase(report.calendar1, report.calendar2)}" var="aClient" paginator="true" styleClass="table" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50,100">
+                            <p:column headerText="#{msgs.clientID}">
+                                <h:outputText value="#{aClient[0]}" />   
+                            </p:column>
+                            <p:column headerText="#{msgs.clientName}">
+                                <h:outputText value="#{aClient[1]}" />   
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </p:overlayPanel>
+    </h:form>
+</ui:composition>

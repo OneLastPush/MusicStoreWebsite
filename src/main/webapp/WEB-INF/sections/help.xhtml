@@ -1,0 +1,78 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui">
+
+    <!--AUTHOR: Dimitri Spyropoulos-->
+    <div class="container">
+        <h:form class="form-signin">
+            <h2 class="form-signin-heading"><h:outputText value="#{msgs.help}"/></h2>
+            <br/>
+            <h4><h:outputText value="#{msgs.helpMsg}"/></h4>
+            <br/>
+            <p:accordionPanel multiple="true">
+                <p:tab title="#{msgs.home}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.homeDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.login}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.loginDesc}"/>
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.register}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.registerDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.searchBtn}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.searchDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.genres}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.genresDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.myDownloads}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.myDownloadsDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.albumPage}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.albumDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.trackPage}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.trackDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.reviews}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.reviewsDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.checkout}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.checkoutDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="#{msgs.finalization}">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{msgs.finalDesc}" />
+                    </h:panelGrid>
+                </p:tab>
+            </p:accordionPanel>
+
+        </h:form>
+    </div>    
+
+</ui:composition>

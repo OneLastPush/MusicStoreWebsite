@@ -1,0 +1,22 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <!--RSS Feed by Seaim Khan-->
+
+
+    <div class="col-xs-3 col-sm-3" id="sidebar">
+        <div>
+            <p:feedReader size="3"  class="list-group" value="#{theFeeds.currentFeed}" var="feed">
+                <a href="#{feed.link}" style="font-weight: bold;display:block">#{feed.title}</a>
+                <h:outputText value="#{feed.description.value}" escape="false"/>
+                <p:separator />
+            </p:feedReader>    
+
+        </div>
+    </div>
+
+
+</ui:composition>

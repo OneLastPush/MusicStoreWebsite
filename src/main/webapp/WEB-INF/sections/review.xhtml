@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+author: Frank Birikundavyi
+-->
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <div class="container">
+        <div id="inputReview">
+            <hr/>
+            <h1>#{msgs.commentLabel}</h1>
+            <h:form id="reviewForm">
+                <br/>
+                <br/>
+                <h:commandButton onclick="PF('reviewDynamicForm').show();" type="button" rendered="#{login.loggedIn}" value="#{msgs.writeReview}" class="btn btn-lg btn-primary btn-block "/>
+                <p:dialog widgetVar="reviewDynamicForm" focus="styled">
+                    <h:panelGroup class="ratingPanel">
+                        <!-- Input for rating - up to 5 -->
+                        <h:outputLabel for="rating" value="#{msgs.rating} :"/>
+                        <h:selectOneRadio id="rating" class="form-control" value="#{reviewView.rating}">
+                            <f:selectItem id="star5" itemValue="5" itemLabel="#{msgs.star5}"><!--<label for="star5" >#{msgs.star5}</label>--></f:selectItem>
+                            <f:selectItem id="star4" itemValue="4" itemLabel="#{msgs.star4}"><!--<label for="star4" >#{msgs.star4}</label>--></f:selectItem>
+                            <f:selectItem id="star3" itemValue="3" itemLabel="#{msgs.star3}"><!--<label for="star3" >#{msgs.star3}</label>--></f:selectItem>
+                            <f:selectItem id="star2" itemValue="2" itemLabel="#{msgs.star2}"><!--<label for="star2" >#{msgs.star2}</label>--></f:selectItem>
+                            <f:selectItem id="star1" itemValue="1" itemLabel="#{msgs.star1}"><!--<label for="star1">#{msgs.star1}</label>--></f:selectItem>
+                            <f:validateLongRange minimum="1" maximum="5"/>
+                        </h:selectOneRadio>
+                        <h:outputLabel for="styled" value="#{msgs.reviewText} :"/>
+                        <br/>
+                        <!-- Input for text review -->
+                        <h:inputTextarea value="#{reviewView.reviewText}" rows = "4" cols = "100" 
+                                 id="styled" onfocus="this.value = ''; setbg('#e5fff3');" 
+                                 onblur="setbg('white')">
+                            <f:validateLength minimum="1" maximum="400"/>
+                        </h:inputTextarea>
+                        <!-- Submit button -->
+                        <h:message for="submitReviewBtn"/>
+                        <h:commandButton action="#{reviewView.addReview(login, songBacking.song)}" id="submitReviewBtn" value="#{msgs.submitBtn}" class="btn btn-lg btn-primary btn-block " >
+                            <f:param value="#{songBacking.song.id}" name="songId"/>
+                        </h:commandButton>
+                    </h:panelGroup>
+                </p:dialog>
+            </h:form>
+        </div>
+        <ui:repeat id="reviewDisplay" var="reviewItem" value="#{reviewView.retriveAllApprovedReviews(songBacking.song.reviewsList)}">
+            <div class="dialogbox">
+                <div class="body">
+                    <span class="tip tip-left"></span>
+                    <div class="message">
+                        <span>#{reviewItem.rating}/5</span>
+                        <br/>
+                        <span>#{reviewItem.reviewText}</span>
+                        <br/>
+                        <hr/>
+                        <span>#{msgs.commentedBy}<b>#{reviewItem.clientId.fname} #{reviewItem.clientId.lname}</b></span>
+                    </div>
+                </div> 
+            </div>
+        </ui:repeat>
+
+    </div>
+
+
+</ui:composition>
+
+

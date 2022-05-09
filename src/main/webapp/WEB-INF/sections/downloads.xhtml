@@ -1,0 +1,61 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui">
+
+    <!--AUTHOR: Dimitri Spyropoulos-->
+    <div class="container">
+        <h:form class="form-signin">
+            <h2 class="form-signin-heading"><h:outputText value="#{msgs.myDownloads}"/></h2>
+            <br/>
+            <h3><h:outputText value="#{msgs.myTracks}"/></h3>
+            <p:dataTable var="item" value="#{songsJpaController.getTracksPurchased(login.currUser.id)}" paginator="true" styleClass="table" rows="15"
+                         paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="15,25,50,100">
+                <p:column headerText="#{msgs.trackTitle}">
+                    <h:outputText value="#{item[0]}" />
+                </p:column>
+
+                <p:column headerText="#{msgs.songLength}">
+                    <h:outputText value="#{item[1]}" />
+                </p:column>
+
+                <p:column headerText="#{msgs.download}">
+                    <p:commandButton value="#{msgs.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+                        <p:fileDownload value="#{downloads.downloadFile}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>          
+
+            <br/>
+            <h3><h:outputText value="#{msgs.myAlbums}"/></h3>
+            <p:dataTable var="item" value="#{songsJpaController.getAlbumsPurchased(login.currUser.id)}" paginator="true" styleClass="table" rows="15"
+                         paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="15,25,50,100">
+                <p:column headerText="#{msgs.trackTitle}">
+                    <h:outputText value="#{item[0]}" />
+                </p:column>
+
+                <p:column headerText="#{msgs.albumTitle}">
+                    <h:outputText value="#{item[2]}" />
+                </p:column>
+
+                <p:column headerText="#{msgs.songLength}">
+                    <h:outputText value="#{item[1]}" />
+                </p:column>
+
+                <p:column headerText="#{msgs.download}">
+                    <p:commandButton value="#{msgs.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+                        <p:fileDownload value="#{downloads.downloadFile}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>       
+    </div>    
+
+</ui:composition>

@@ -1,0 +1,111 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <!-- Author: Seaim Khan -->    
+    <h:form id="form">
+        <p:panel header="#{msgs.editUserHead}">
+            <h:panelGrid id="editUserGrid" columns="3" cellpadding="12">
+                <p:outputLabel for="userEmail" value="#{msgs.email}" />
+                <p:inputText id="userEmail" disabled="true" value="#{editUser.email}"
+                             type="email" placeholder="#{msgs.email}"/>
+                <p:message for="userEmail" />
+
+                <p:outputLabel for="userCompany" value="#{msgs.companyName}" />
+                <p:inputText id="userCompany" value="#{editUser.companyName}" placeholder="#{msgs.companyName}" validatorMessage="error"/>
+                <p:message for="userCompany" />
+
+                <p:outputLabel for="userTitle" value="#{msgs.title}" />
+                <p:selectOneMenu id="userTitle" value="#{editUser.title}">
+                    <f:selectItem itemValue="Mr." itemLabel="Mr." />
+                    <f:selectItem itemValue="Mrs." itemLabel="Mrs." />
+                    <f:selectItem itemValue="Dr." itemLabel="Dr." />
+                </p:selectOneMenu>
+                <p:message for="userTitle" />
+
+                <p:outputLabel for="userFName" value="#{msgs.fname}" />
+                <p:inputText id="userFName" required="true" value="#{editUser.fname}" placeholder="#{msgs.fname}" validatorMessage="error"/>
+                <p:message for="userFName" />
+
+                <p:outputLabel for="userLName" value="#{msgs.lname}" />
+                <p:inputText id="userLName" required="true" value="#{editUser.lname}" placeholder="#{msgs.lname}" />
+                <p:message for="userLName" />
+
+                <p:outputLabel for="userAddr1" value="#{msgs.addressLine1}" />
+                <p:inputText id="userAddr1" required="true" value="#{editUser.address1}" placeholder="#{msgs.addressLine1}" />
+                <p:message for="userAddr1" />
+
+                <p:outputLabel for="userAddr2" value="#{msgs.addressLine2}" />
+                <p:inputText id="userAddr2" value="#{editUser.address2}" placeholder="#{msgs.addressLine2}" validatorMessage="error"/>
+                <p:message for="userAddr2" />
+
+                <p:outputLabel for="userCity" value="#{msgs.city}" />
+                <p:inputText id="userCity" required="true" value="#{editUser.city}" placeholder="#{msgs.city}" validatorMessage="error"/>
+                <p:message for="userCity" />
+
+                <p:outputLabel for="userProvince" value="#{msgs.province}" />
+                <p:selectOneMenu id="userProvince" value="#{editUser.province}">
+                    <f:selectItem itemValue="Quebec" itemLabel="QC" />
+                    <f:selectItem itemValue="Ontario" itemLabel="ON" />
+                    <f:selectItem itemValue="Manitoba" itemLabel="MB" />
+                    <f:selectItem itemValue="Saskatchewan" itemLabel="SK" />
+                    <f:selectItem itemValue="Alberta" itemLabel="AB" />
+                    <f:selectItem itemValue="British Colombia" itemLabel="BC" />
+                    <f:selectItem itemValue="Nova Scotia" itemLabel="NS" />
+                    <f:selectItem itemValue="New Brunswick" itemLabel="NB" />
+                    <f:selectItem itemValue="Newfoundland and Labrador" itemLabel="NL" />
+                    <f:selectItem itemValue="Prince Edward Island" itemLabel="PE" />
+                    <f:selectItem itemValue="Northwest Territories" itemLabel="NT" />
+                    <f:selectItem itemValue="Nunavut" itemLabel="NU" />
+                    <f:selectItem itemValue="Yukon" itemLabel="YK" />                          
+                </p:selectOneMenu>
+                <p:message for="userProvince" />
+
+                <p:outputLabel for="userCountry" value="#{msgs.country}" />
+                <p:selectOneMenu id="userCountry" value="#{editUser.country}">
+                    <f:selectItem itemValue="Canada" itemLabel="Canada" /> 
+                </p:selectOneMenu>
+                <p:message for="userCountry" />
+
+                <p:outputLabel for="userPostal" value="#{msgs.postalCode}" />
+                <p:inputText id="userPostal" required="true" value="#{editUser.postalCode}" placeholder="#{msgs.postalCode}" validatorMessage="error">
+                    <f:converter converterId="com.convert.PostalCode" /> 
+                </p:inputText>
+                <p:message for="userPostal" />
+
+                <p:outputLabel for="userHomeNum" value="#{msgs.homeNum}" />
+                <p:inputMask id="userHomeNum" value="#{editUser.home}" placeholder="#{msgs.homeNum}" mask="(999) 999-9999">
+                    <f:validator validatorId="com.trouble.PhoneNumberValidator"/>
+                </p:inputMask>
+                <p:message for="userHomeNum" />
+
+                <p:outputLabel for="userCellNum" value="#{msgs.cellNum}" />                               
+                <p:inputMask id="userCellNum" value="#{editUser.cell}" placeholder="#{msgs.cellNum}" mask="(999) 999-9999"/>
+                <p:message for="userCellNum" />
+
+                <p:outputLabel for="lastGenreSearched" value="#{msgs.lastGenreSearched}" />
+                <p:autoComplete id="lastGenreSearched" value="#{editUser.lastGenreSearched}" completeMethod="#{theGenres.completeGenre}" placeholder="#{msgs.genreName}" 
+                                converter="#{genreNameConverter}" var="g" itemLabel="#{g.genreName}" itemValue="#{g}" />
+                <p:message for="lastGenreSearched" />
+                
+                <p:outputLabel for="adminPrivilege" value="#{msgs.adminPrivHead}" />
+                <p:selectOneRadio required="true" id="adminPrivilege" value="#{editUser.adminPrivilege}">
+                    <f:selectItem itemLabel="#{msgs.trueSelect}" itemValue="true" />
+                    <f:selectItem itemLabel="#{msgs.falseSelect}" itemValue="false" />
+                </p:selectOneRadio>
+                <p:message for="adminPrivilege" />
+            </h:panelGrid>
+            <p:commandButton value="#{msgs.edit}" action="#{editUser.editUser()}">
+                <p:confirm header="#{msgs.conf}" message="#{msgs.editUserConf}" icon="ui-icon-alert" />
+            </p:commandButton>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msgs.trueSelect}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msgs.falseSelect}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"></h:link>
+    </h:form>
+</ui:composition>

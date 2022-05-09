@@ -1,0 +1,115 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <!-- Author: Seaim Khan -->    
+    <h:form id="form">
+        <p:panel header="#{msgs.createUserHead}">
+            <h:panelGrid id="createUserGrid" columns="3" cellpadding="12">
+                <p:outputLabel for="userEmail" value="#{msgs.email}" />
+                <p:inputText id="userEmail" required="true" value="#{register.email}"
+                             type="email" placeholder="#{msgs.email}">
+                    <f:validator binding="#{emailValidator}" />
+                    <f:validateLength maximum="255" />
+                </p:inputText>
+                <p:message for="userEmail" />
+
+                <p:outputLabel for="userPass" value="#{msgs.password}" />
+                <p:inputText id="userPass" type="password" required="true" value="#{register.password}" placeholder="#{msgs.password}">
+                    <f:validateLength maximum="255" />
+                </p:inputText>
+                <p:message for="userPass" />
+
+                <p:outputLabel for="userTitle" value="#{msgs.title}" />
+                <p:selectOneMenu id="userTitle" value="#{register.title}">
+                    <f:selectItem itemValue="Mr." itemLabel="Mr." />
+                    <f:selectItem itemValue="Mrs." itemLabel="Mrs." />
+                    <f:selectItem itemValue="Dr." itemLabel="Dr." />
+                </p:selectOneMenu>
+                <p:message for="userTitle" />
+
+                <p:outputLabel for="userFName" value="#{msgs.fname}" />
+                <p:inputText id="userFName" required="true" value="#{register.fname}" placeholder="#{msgs.fname}" validatorMessage="error">
+                    <f:validateLength maximum="100" />
+                </p:inputText>
+                <p:message for="userFName" />
+
+                <p:outputLabel for="userLName" value="#{msgs.lname}" />
+                <p:inputText id="userLName" required="true" value="#{register.lname}" placeholder="#{msgs.lname}" >
+                    <f:validateLength maximum="100" />
+                </p:inputText>
+                <p:message for="userLName" />
+
+                <p:outputLabel for="userAddr1" value="#{msgs.addressLine1}" />
+                <p:inputText id="userAddr1" required="true" value="#{register.address1}" placeholder="#{msgs.addressLine1}">
+                    <f:validateLength maximum="100" />
+                </p:inputText>
+                <p:message for="userAddr1" />
+
+                <p:outputLabel for="userAddr2" value="#{msgs.addressLine2}" />
+                <p:inputText id="userAddr2" value="#{register.address2}" placeholder="#{msgs.addressLine2}" validatorMessage="error">
+                    <f:validateLength maximum="100" />
+                </p:inputText>
+                <p:message for="userAddr2" />
+
+                <p:outputLabel for="userCity" value="#{msgs.city}" />
+                <p:inputText id="userCity" required="true" value="#{register.city}" placeholder="#{msgs.city}" validatorMessage="error">
+                    <f:validateLength maximum="100" />
+                </p:inputText>
+                <p:message for="userCity" />
+
+                <p:outputLabel for="userProvince" value="#{msgs.province}" />
+                <p:selectOneMenu id="userProvince" value="#{register.province}">
+                    <f:selectItem itemValue="Quebec" itemLabel="QC" />
+                    <f:selectItem itemValue="Ontario" itemLabel="ON" />
+                    <f:selectItem itemValue="Manitoba" itemLabel="MB" />
+                    <f:selectItem itemValue="Saskatchewan" itemLabel="SK" />
+                    <f:selectItem itemValue="Alberta" itemLabel="AB" />
+                    <f:selectItem itemValue="British Colombia" itemLabel="BC" />
+                    <f:selectItem itemValue="Nova Scotia" itemLabel="NS" />
+                    <f:selectItem itemValue="New Brunswick" itemLabel="NB" />
+                    <f:selectItem itemValue="Newfoundland and Labrador" itemLabel="NL" />
+                    <f:selectItem itemValue="Prince Edward Island" itemLabel="PE" />
+                    <f:selectItem itemValue="Northwest Territories" itemLabel="NT" />
+                    <f:selectItem itemValue="Nunavut" itemLabel="NU" />
+                    <f:selectItem itemValue="Yukon" itemLabel="YK" />                          
+                </p:selectOneMenu>
+                <p:message for="userProvince" />
+
+                <p:outputLabel for="userCountry" value="#{msgs.country}" />
+                <p:selectOneMenu id="userCountry" value="#{register.country}">
+                    <f:selectItem itemValue="Canada" itemLabel="Canada" /> 
+                </p:selectOneMenu>
+                <p:message for="userCountry" />
+
+                <p:outputLabel for="userPostal" value="#{msgs.postalCode}" />
+                <p:inputText id="userPostal" required="true" value="#{register.postalCode}" placeholder="#{msgs.postalCode}" validatorMessage="#{msgs.postalErr}">
+                    <f:converter converterId="com.convert.PostalCode" /> 
+                    <f:validateRegex pattern="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"/>
+                </p:inputText>
+                <p:message for="userPostal" />
+
+                <p:outputLabel for="userHomeNum" value="#{msgs.homeNum}" />
+                <p:inputMask id="userHomeNum" value="#{register.home}" placeholder="#{msgs.homeNum}" mask="(999) 999-9999">
+                    <f:validator validatorId="com.trouble.PhoneNumberValidator"/>
+                </p:inputMask>
+                <p:message for="userHomeNum" />
+
+                <p:outputLabel for="userCellNum" value="#{msgs.cellNum}" />                               
+                <p:inputMask id="userCellNum" value="#{register.cell}" placeholder="#{msgs.cellNum}" mask="(999) 999-9999"/>
+                <p:message for="userCellNum" />
+            </h:panelGrid>
+            <p:commandButton value="#{msgs.createBtn}" action="#{register.createUser()}">
+                <p:confirm header="#{msgs.conf}" message="#{msgs.createUserConf}" icon="ui-icon-alert" />
+            </p:commandButton>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msgs.trueSelect}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msgs.falseSelect}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"></h:link>
+    </h:form>
+</ui:composition>

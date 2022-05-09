@@ -1,0 +1,82 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui" >
+
+    <!-- Author: Seaim Khan -->    
+    <h:form id="form" enctype="multipart/form-data">
+        <p:panel id="panel" header="#{msgs.createAlbumHead}">
+            <h:panelGrid id="createAlbumGrid" columns="3" cellpadding="12">
+                <p:outputLabel for="albumTitle" value="#{msgs.albumTitleHead}" />
+                <p:inputText id="albumTitle" required="true" value="#{album.albumTitle}" type="text" placeholder="#{msgs.albumTitle}">
+                    <f:validateLength maximum="255" />
+                </p:inputText>
+                <p:message for="albumTitle" />
+
+                <p:outputLabel for="albumArtist" value="#{msgs.artistHead}" />
+                <p:autoComplete id="albumArtist" required="true" value="#{album.artist}" completeMethod="#{theArtists.completeArtist}" placeholder="#{msgs.ArtistLabel}" 
+                                converter="#{artistNameConverter}" var="a" itemLabel="#{a.artist}" itemValue="#{a}" />
+                <p:message for="albumArtist" />
+
+                <p:outputLabel for="albumLabel" value="#{msgs.recLabelHead}" />
+                <p:autoComplete id="albumLabel" required="true" value="#{album.recordingLabels}" completeMethod="#{theLabels.completeLabel}" placeholder="#{msgs.labelName}"
+                                converter="#{labelNameConverter}" var="l" itemLabel="#{l.labelName}" itemValue="#{l}"/>
+                <p:message for="albumLabel" />
+
+                <p:outputLabel for="albumRelease" value="#{msgs.relDateHead}" />
+                <p:calendar id="albumRelease" required="true" value="#{album.releaseDate}" pattern="MM-dd-yyyy" mask="true" />
+                <p:message for="albumRelease" />
+
+                <p:outputLabel for="albumCover" value="#{msgs.albumCvrHead}" />
+                <p:fileUpload id="albumCover" required="true" fileUploadListener="#{album.handleFileUpload}" auto="true"
+                              update="messages" sizeLimit="100000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|jpg|png)$/" />
+                <p:message for="albumCover" />
+
+                <p:outputLabel for="albumTrackCount" value="#{msgs.trackCntHead}" />
+                <p:inputText type="number" id="albumTrackCount" required="true" value="#{album.trackCount}" placeholder="#{msgs.trackCount}">
+                    <f:validateLongRange minimum = "1"/>
+                </p:inputText>
+                <p:message for="albumTrackCount" />
+
+                <p:outputLabel for="albumCostPrice" value="#{msgs.cPriceHead}" />
+                <p:inputNumber id="albumCostPrice" required="true" value="#{album.costPrice}" placeholder="0.00" />
+                <p:message for="albumCostPrice" />
+
+                <p:outputLabel for="listPrice" value="#{msgs.lPriceHead}" />
+                <p:inputNumber id="listPrice" required="true" value="#{album.listPrice}" placeholder="0.00"/>
+                <p:message for="listPrice" />
+
+                <p:outputLabel for="salePrice" value="#{msgs.sPriceHead}" />
+                <p:inputNumber id="salePrice" value="#{album.salePrice}" placeholder="0.00" minValue="0.00">
+                    <f:validator validatorId="com.trouble.SalePriceValidator" />
+                </p:inputNumber>
+                <p:message for="salePrice" />
+
+                <p:outputLabel for="albumRemovalStatus" value="#{msgs.remStatHead}" />
+                <p:selectOneRadio required="true" id="albumRemovalStatus" value="#{album.removalStatus}">
+                    <f:selectItem itemLabel="#{msgs.trueSelect}" itemValue="true" />
+                    <f:selectItem itemLabel="#{msgs.falseSelect}" itemValue="false" />
+                    <p:ajax process="@this" update="albumRemove" />
+                </p:selectOneRadio>
+                <p:message for="albumRemovalStatus" />
+
+                <p:outputLabel for="albumRemove" value="#{msgs.remDateHead}" />
+                <p:calendar id="albumRemove" value="#{album.removalDate}" mindate="#{album.currentDate}" pattern="MM-dd-yyyy" mask="true" 
+                            required="#{album.removalStatus == 'true'}" disabled="#{album.removalStatus == 'false'}" />
+                <p:message for="albumRemove" />
+            </h:panelGrid>
+            <p:commandButton value="#{msgs.createBtn}" action="#{album.createAlbum()}">
+                <p:confirm header="#{msgs.conf}" message="#{msgs.createAlbumConf}" icon="ui-icon-alert" />
+            </p:commandButton>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"/>
+        <p:growl id="messages" showDetail="true" />
+    </h:form>
+</ui:composition>

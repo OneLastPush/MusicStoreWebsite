@@ -1,0 +1,463 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <!--Management Tab Menu by Seaim Khan
+        TODO: Edit/Remove,-->
+
+    <h:form id="masterForm">
+        <p:growl id="msgs" showDetail="true"/>
+        <p:commandButton id="dataTableBtn" value="#{msgs.data}" type="button" />
+        <p:overlayPanel id="dataPanel" for="dataTableBtn" hideEffect="fade" dynamic="true"> 
+            <p:tabView id="tabs">
+                <p:tab title="#{msgs.albums}" id="albumTab">                   
+                    <p:dataTable id="albumTable" resizableColumns="true" liveResize="true" value="#{theAlbums.albums}" var="anAlbum" widgetVar="albumTable"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{anAlbum.id}" selectionMode="single" selection="#{album.currentAlbum}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" filteredValue="#{theAlbums.filteredAlbums}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:albumTable:editAlbumBtn" listener="#{album.onRowSelect}" />
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="#{msgs.search}" />
+                                <p:inputText id="globalFilter" onkeyup="PF('albumTable').filter()" style="width:150px" placeholder="#{msgs.keyword}"/>
+                            </p:outputPanel>
+                            <h:outputLink value="createAlbumPage.xhtml">#{msgs.createAlbumHead}</h:outputLink>
+                        </f:facet>                           
+
+                        <p:column filterBy="#{anAlbum.id}" headerText="#{msgs.id}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.id}" />
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.albumTitle}" headerText="#{msgs.albumTitle}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.albumTitle}" />
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.releaseDate}" headerText="#{msgs.releaseDate}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.releaseDate}">                              
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.artistId}" headerText="#{msgs.artistID}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.artistId.id}" />
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.recordingLabel}" headerText="#{msgs.labelID}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.recordingLabel.id}" />
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.trackCount}" headerText="#{msgs.trackCount}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.trackCount}" />                         
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.dateAdded}" headerText="#{msgs.dateAdded}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.dateAdded}">                               
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.costPrice}" headerText="#{msgs.costPrice}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.costPrice}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>  
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.listPrice}" headerText="#{msgs.listPrice}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.listPrice}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>                           
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.salePrice}" headerText="#{msgs.salePrice}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.salePrice}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>                                                     
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.removalStatus}" headerText="#{msgs.removalStatus}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.removalStatus}" /> 
+                        </p:column>
+                        <p:column filterBy="#{anAlbum.removalDate}" headerText="#{msgs.removalDate}" filterMatchMode="contains">
+                            <h:outputText value="#{anAlbum.removalDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msgs.totalSales}">
+                            <h:outputText value="#{theAlbums.getAlbumTotalSales(anAlbum.id)}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="editAlbumBtn" actionListener="#{album.setEditAlbum}" action="editAlbumPage.xhtml" update="albumTable" value="#{msgs.edit}" disabled="#{album.disabled}" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.artists}">  
+                    <p:dataTable id="artistTable" resizableColumns="true" liveResize="true" value="#{theArtists.artists}" var="anArtist"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{anArtist.id}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" reflow="true">
+                        <p:column headerText="#{msgs.id}">
+                            <h:outputText value="#{anArtist.id}" /> 
+                        </p:column>
+                        <p:column headerText="#{msgs.artistName}">
+                            <h:outputText value="#{anArtist.artist}" /> 
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.genres}">
+                    <p:dataTable id="genreTable" resizableColumns="true" liveResize="true" value="#{theGenres.genres}" var="aGenre"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aGenre.id}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" reflow="true">
+                        <p:column headerText="#{msgs.id}">
+                            <h:outputText value="#{aGenre.id}" /> 
+                        </p:column>
+                        <p:column headerText="#{msgs.genreName}">
+                            <h:outputText value="#{aGenre.genreName}" />   
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.invoices}">
+                    <p:dataTable id="invoiceTable" resizableColumns="true" liveResize="true" value="#{theInvoices.invoices}" var="anInvoice" widgetVar="invoiceTable"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{anInvoice.id}" selectionMode="single" selection="#{invoice.currentInvoice}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" filteredValue="#{theInvoices.filteredInvoices}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:invoiceTable:editInvoiceBtn" listener="#{invoice.onRowSelect}" />
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="#{msgs.search}" />
+                                <p:inputText id="globalFilter" onkeyup="PF('invoiceTable').filter()" style="width:150px" placeholder="#{msgs.keyword}"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column filterBy="#{anInvoice.id}" headerText="#{msgs.id}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.id}" /> 
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.clientId}" headerText="#{msgs.clientID}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.clientId.id}" /> 
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.saleDate}" headerText="#{msgs.saleDate}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.saleDate}" />
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.netValue}" headerText="#{msgs.netValue}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.netValue}" />
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.pst}" headerText="#{msgs.pst}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.pst}" />
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.gst}" headerText="#{msgs.gst}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.gst}" />                     
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.hst}" headerText="#{msgs.hst}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.hst}" />       
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.grossValue}" headerText="#{msgs.grossValue}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.grossValue}" />
+                        </p:column>
+                        <p:column filterBy="#{anInvoice.removed}" headerText="#{msgs.removed}" filterMatchMode="contains">
+                            <h:outputText value="#{anInvoice.removed}" /> 
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="editInvoiceBtn" actionListener="#{invoice.setEditInvoice}" action="editInvoicePage.xhtml" update="invoiceTable" value="#{msgs.edit}" disabled="#{invoice.disabled}" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.labels}">
+                    <p:dataTable value="#{theLabels.labels}" var="aLabel" resizableColumns="true" liveResize="true"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aLabel.id}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" reflow="true">
+                        <p:column headerText="#{msgs.id}">
+                            <h:outputText value="#{aLabel.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.labelName}">
+                            <h:outputText value="#{aLabel.labelName}" /> 
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.reviews}">
+                    <p:dataTable id="reviewTable" value="#{theReviews.reviews}" resizableColumns="true" liveResize="true" var="aReview"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aReview.id}" selectionMode="single" selection="#{review.selected}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:reviewTable:manReviewBtn" listener="#{review.onRowSelect}" />
+                        <p:column headerText="#{msgs.id}">
+                            <h:outputText value="#{aReview.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.inventoryID}">
+                            <h:outputText value="#{aReview.inventoryId.id}" /> 
+                        </p:column>
+                        <p:column headerText="#{msgs.clientID}">
+                            <h:outputText value="#{aReview.clientId.id}" />                      
+                        </p:column>
+                        <p:column headerText="#{msgs.rating}">
+                            <h:outputText value="#{aReview.rating}" />  
+                        </p:column>
+                        <p:column headerText="#{msgs.reviewText}">
+                            <h:outputText value="#{aReview.reviewText}" />  
+                        </p:column>
+                        <p:column headerText="#{msgs.approvalStatus}">
+                            <h:outputText value="#{aReview.approvalStatus}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="manReviewBtn" action="#{review.setReviewStatus()}" update="reviewTable" value="#{msgs.changeReviewStatus}" disabled="#{review.disabled}">
+                                <p:confirm header="#{msgs.conf}" message="#{msgs.changeRevStatCong}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.songs}">
+                    <p:dataTable id="songTable" value="#{theSongs.songs}" resizableColumns="true" liveResize="true" var="aSong" widgetVar="songTable"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aSong.id}" selectionMode="single" selection="#{album.currentSong}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" filteredValue="#{theSongs.filteredSongs}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:songTable:editSongBtn" listener="#{album.onSongRowSelect}" />
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="#{msgs.search}" />
+                                <p:inputText id="globalFilter" onkeyup="PF('songTable').filter()" style="width:150px" placeholder="#{msgs.keyword}"/>
+                            </p:outputPanel>
+                            <h:outputLink value="createTrackPage.xhtml">#{msgs.createTrackHead}</h:outputLink>
+                        </f:facet>
+                        <p:column filterBy="#{aSong.id}" headerText="#{msgs.id}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.id}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.albumId}" headerText="#{msgs.albumID}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.albumId.id}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.trackTitle}" headerText="#{msgs.trackTitle}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.trackTitle}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.artistId}" headerText="#{msgs.artistID}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.artistId.id}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aSong.songLength}" headerText="#{msgs.songLength}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.songLength}">
+                                <f:convertDateTime pattern="HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{aSong.trackNumber}" headerText="#{msgs.trackNum}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.trackNumber}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.genreId}" headerText="#{msgs.genreID}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.genreId.id}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.costPrice}" headerText="#{msgs.costPrice}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.costPrice}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.listPrice}" headerText="#{msgs.listPrice}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.listPrice}" />    
+                        </p:column>
+                        <p:column filterBy="#{aSong.salePrice}" headerText="#{msgs.salePrice}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.salePrice}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.dateAdded}" headerText="#{msgs.dateAdded}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.dateAdded}">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{aSong.singleSong}" headerText="#{msgs.singleBool}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.singleSong}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.removalStatus}" headerText="#{msgs.removalStatus}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.removalStatus}" />
+                        </p:column>
+                        <p:column filterBy="#{aSong.removalDate}" headerText="#{msgs.removalDate}" filterMatchMode="contains">
+                            <h:outputText value="#{aSong.removalDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msgs.totalSales}">
+                            <h:outputText value="#{theSongs.getSongTotalSales(aSong.id)}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="editSongBtn" actionListener="#{album.setEditTrack}" action="editTrackPage.xhtml" update="songTable" value="#{msgs.edit}" disabled="#{album.disabledSong}" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.songwriters}">
+                    <p:dataTable value="#{theSongwriters.songwriters}" resizableColumns="true" liveResize="true" var="aSongwriter"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aSongwriter.id}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" reflow="true">
+                        <p:column headerText="#{msgs.id}">
+                            <h:outputText value="#{aSongwriter.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.songwriterName}">
+                            <h:outputText value="#{aSongwriter.songwriter}" /> 
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.surveys}">
+                    <p:dataTable id="surveyTable" value="#{theSurveys.surveys}" var="aSurvey" resizableColumns="true" liveResize="true"
+                                 paginator="true" styleClass="table" rows="10" selectionMode="single" selection="#{surveyAction.selected}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" rowKey="#{aSurvey.id}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:surveyTable:setSurveyBtn" listener="#{surveyAction.onRowSelect}" />
+                        <f:facet name="header">
+                            <h:outputLink value="createSurveyPage.xhtml">#{msgs.createSurveyHead}</h:outputLink>
+                        </f:facet>
+                        <p:column headerText="#{msgs.id}" style="text-align: center">
+                            <h:outputText value="#{aSurvey.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.question}">
+                            <h:outputText value="#{aSurvey.question}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.curSurvey}">
+                            <h:outputText value="#{aSurvey.currentQuestion}" />   
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="setSurveyBtn" action="#{surveyAction.setCurrentSurvey()}" update="surveyTable" value="#{msgs.setCurSurvey}" disabled="#{surveyAction.disabled}">
+                                <p:confirm header="#{msgs.conf}" message="#{msgs.setSurveyConf}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="#{msgs.users}">
+                    <p:dataTable id="userTable" value="#{theUsers.users}" resizableColumns="true" liveResize="true" var="aUser" widgetVar="userTable"
+                                 paginator="true" styleClass="table" rows="10" rowKey="#{aUser.id}" selectionMode="single" selection="#{editUser.current}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" filteredValue="#{theUsers.filteredUsers}" reflow="true" >
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:userTable:editUserBtn" listener="#{editUser.onRowSelect}" />
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="#{msgs.search}" />
+                                <p:inputText id="globalFilter" onkeyup="PF('userTable').filter()" style="width:150px" placeholder="#{msgs.keyword}"/>
+                            </p:outputPanel>
+                            <h:outputLink value="createUserPage.xhtml">#{msgs.createUserHead}</h:outputLink>
+                        </f:facet>
+                        <p:column filterBy="#{aUser.id}" headerText="#{msgs.id}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.id}" />   
+                        </p:column>
+                        <p:column filterBy="#{aUser.title}" headerText="#{msgs.title}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.title}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.fname}" headerText="#{msgs.fname}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.fname}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.lname}" headerText="#{msgs.lname}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.lname}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.companyName}" headerText="#{msgs.companyName}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.companyName}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.address1}" headerText="#{msgs.addressLine1}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.address1}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.address2}" headerText="#{msgs.addressLine2}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.address2}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.city}" headerText="#{msgs.city}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.city}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.province}" headerText="#{msgs.province}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.province}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.country}" headerText="#{msgs.country}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.country}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.postalCode}" headerText="#{msgs.postalCode}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.postalCode}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.homeNumber}" headerText="#{msgs.homeNum}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.homeNumber}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.cellNumber}" headerText="#{msgs.cellNum}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.cellNumber}" /> 
+                        </p:column>
+                        <p:column filterBy="#{aUser.email}" headerText="#{msgs.email}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.email}" />
+                        </p:column>
+                        <p:column filterBy="#{aUser.lastGenreSearched}" headerText="#{msgs.lastGenreSearched}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.lastGenreSearched}" />
+                        </p:column>
+                        <p:column filterBy="#{aUser.adminPrivilege}" headerText="#{msgs.admin}" filterMatchMode="contains">
+                            <h:outputText value="#{aUser.adminPrivilege}" />
+                        </p:column>
+                        <p:column headerText="#{msgs.totalPurchases}">
+                            <h:outputText value="#{theUsers.getTotalPurchases(aUser.id)}">
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="editUserBtn" actionListener="#{editUser.setEditUser()}" action="editUserPage.xhtml" update="userTable" value="#{msgs.edit}" disabled="#{editUser.disabled}" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="#{msgs.feedHead}">
+                    <p:dataTable id="feedTable" value="#{theFeeds.feed}" var="aFeed" resizableColumns="true" liveResize="true"
+                                 paginator="true" styleClass="table" rows="10" selectionMode="single" selection="#{rss.selected}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" rowKey="#{aFeed.id}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:feedTable:setFeedBtn" listener="#{rss.onRowSelect}" />
+                        <f:facet name="header">
+                            <h:outputLink value="addFeedPage.xhtml">#{msgs.addFeedHead}</h:outputLink>
+                        </f:facet>
+                        <p:column headerText="#{msgs.id}" style="text-align: center">
+                            <h:outputText value="#{aFeed.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.feed}">
+                            <h:outputText value="#{aFeed.feed}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.curFeed}">
+                            <h:outputText value="#{aFeed.currentRss}" />   
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="setFeedBtn" action="#{rss.setCurrentFeed()}" update="feedTable" value="#{msgs.setCurFeed}" disabled="#{rss.disabled}">
+                                <p:confirm header="#{msgs.conf}" message="#{msgs.setFeedConf}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="#{msgs.bannerAd}">
+                    <p:dataTable id="adTable" value="#{theAds.ads}" var="aBanner" resizableColumns="true" liveResize="true"
+                                 paginator="true" styleClass="table" rows="10" selectionMode="single" selection="#{banner.selectedAd}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50,100" rowKey="#{aBanner.id}" reflow="true">
+                        <p:ajax event="rowSelect" update=":masterForm:tabs:adTable:setAdBtn" listener="#{banner.onRowSelect}" />
+                        <f:facet name="header">
+                            <h:outputLink value="addBannerAdPage.xhtml">#{msgs.addBannerHead}</h:outputLink>
+                        </f:facet>
+                        <p:column headerText="#{msgs.id}" style="text-align: center">
+                            <h:outputText value="#{aBanner.id}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.companyName}">
+                            <h:outputText value="#{aBanner.company}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.bannerFileName}">
+                            <h:outputText value="#{aBanner.bannerPic}" />   
+                        </p:column>
+                        <p:column headerText="#{msgs.displayed}">
+                            <h:outputText value="#{aBanner.display}" />   
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="setAdBtn" action="#{banner.setAd()}" update="adTable" value="#{msgs.setCurAd}" disabled="#{banner.disabled}">
+                                <p:confirm header="#{msgs.conf}" message="#{msgs.setAdConf}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                    </p:dataTable>
+                </p:tab>
+            </p:tabView>
+        </p:overlayPanel>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,86 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!--AUTHOR: Frank Birikundavyi-->
+    <div class="container">
+        <div id="page">
+            <h1>#{msgs.advanceSearchLabel}</h1>
+            <h:form id="searchForm" >
+                <fieldset>
+                    <!-- This is the search input field -->
+                    <p:inputText class="fa fa-search" id="searchInputText" value="#{searchView.searchInput}" label="#{msgs.searchBtn} ..." required="true">
+                        <f:validateLength minimum="1" />
+                    </p:inputText>
+                    <!-- This is the error message; commented out since no message is set -->
+                    <!--                    <h:message id="searchInputError" for="searchInputText" style="color: red"/>-->
+                    <br/>
+                    <!-- This is the radio button to set by what you are looking for
+                    The options are Artist, Date and Title
+                    -->
+                    <h:outputLabel for="by" value="#{msgs.searchBy}"/>
+
+                    <h:selectOneRadio id="by" value="#{searchView.by}" >
+                        <f:selectItem itemValue="title" itemLabel="#{msgs.title}"/>
+                        <f:selectItem itemValue="artist" itemLabel="#{msgs.ArtistLabel}"/>
+                        <f:selectItem itemValue="date" itemLabel="#{msgs.dateAdded}"/>
+                    </h:selectOneRadio>
+                    <!-- End of radio button -->
+                    <h:panelGroup layout="block" id="dateEntry">
+
+                        <h:outputLabel value="#{msgs.DateFrom}"  />
+                        <p:inputMask id="dateFrom" mask="99/99/9999"  value="#{searchView.dateFrom}">
+                            <f:convertDateTime pattern="MM/dd/yyyy" for="dateFrom" />
+                        </p:inputMask>
+                        <!-- Not re-render so I removed this field 
+                        readonly or disabled="#{!searchView.getBy().equals('date')}" -->
+
+                        <h:outputLabel value="#{msgs.DateTo}"  />
+                        <p:inputMask id="dateTo" mask="99/99/9999"  value="#{searchView.dateTo}">
+                            <f:convertDateTime pattern="MM/dd/yyyy" for="dateTo"/>
+                        </p:inputMask>
+                        <p:watermark  value="MM/DD/YYYY" for="dateFrom" />
+                        <p:watermark  value="MM/DD/YYYY" for="dateTo" />
+                    </h:panelGroup>
+                    <br/>
+                    <h:outputLabel value="#{msgs.searchBtn} :"/>
+                    <h:selectOneRadio id="type" value="#{searchView.resultTypeOption}">
+                        <f:selectItem itemValue="song" itemLabel="#{msgs.songs}"/>
+                        <f:selectItem itemValue="album" itemLabel="#{msgs.albums}"/>
+                    </h:selectOneRadio>
+                    <h:commandButton actionListener="#{searchView.search()}"  value="Submit" class="fa fa-search">
+                        <f:ajax execute="searchInputText by type dateFrom dateTo" render="resultDiv"/>
+                    </h:commandButton>
+                </fieldset>
+            </h:form>
+        </div>
+        <!-- this part display the result of the search; it separate in two one for album and on for song -->
+        <!-- only albums or songs can be display; never at the same time -->
+        <h:panelGroup layout="block" id="resultDiv">
+            <div>#{msgs.searchingForLabel} : #{searchView.searchInput}</div>
+            <div>#{msgs.numberOfResult} : #{searchView.size}</div>
+            <hr/>
+            <!-- this part is for song -->
+            <ui:repeat var="result" value="#{searchView.songsResult}">
+                <div>
+                    <h:link outcome="songPage" value="#{result.trackTitle}" class="btn btn-default">
+                        <f:param  value="#{result.id}"  name="songId"/>
+                    </h:link>
+                </div>
+            </ui:repeat>
+            <!-- this part is for album -->
+            <ui:repeat var="result" value="#{searchView.albumResult}">
+                <div>
+                    <h:link outcome="albumPage" value="#{result.albumTitle}" class="btn btn-default">
+                        <f:param  value="#{result.id}"  name="albumId"/>
+                    </h:link>
+                </div>
+            </ui:repeat>
+
+        </h:panelGroup>
+    </div>
+</ui:composition>

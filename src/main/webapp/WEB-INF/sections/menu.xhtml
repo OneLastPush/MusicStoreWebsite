@@ -1,0 +1,28 @@
+
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:b="http://bootsfaces.net/ui">
+
+    <!--AUTHOR: Max Page-Slowik, Frank Birikundavyi, Dimitri Spyropoulos-->
+    <h:form id="navBarForm">
+        <b:navBar brand="#{msgs.projectName}" brandHref="#{request.contextPath}/index.xhtml" inverse="true">
+            <b:navbarLinks>
+                <b:navLink value="#{msgs.home}" href="#{request.contextPath}/index.xhtml"></b:navLink>
+                <b:navCommandLink id="loginButton"  href="#{request.contextPath}/loginpage.xhtml" rendered="#{!login.loggedIn}"   value="#{msgs.login}" ></b:navCommandLink >
+                <b:navCommandLink id="logoutButton" actionListener="#{login.logout()}"  href="#{request.contextPath}/index.xhtml" rendered="#{login.loggedIn}" value="#{msgs.logout}"></b:navCommandLink >
+                <b:navLink value="#{msgs.checkout}" href="#{request.contextPath}/secured/checkout.xhtml"></b:navLink>
+                <b:navLink value="#{msgs.myDownloads}" href="#{request.contextPath}/secured/downloadsPage.xhtml"></b:navLink>
+                <b:navLink id="searchBtn" value="#{msgs.searchBtn}" href="#{request.contextPath}/searchPage.xhtml"></b:navLink>
+                <b:navLink id="genreBtn" value="#{msgs.genres}" href="#{request.contextPath}/genrePage.xhtml"></b:navLink>
+                <b:navLink value="#{msgs.help}" href="#{request.contextPath}/helpPage.xhtml"></b:navLink>
+                <b:navCommandLink value="EN" action="#{localeBean.setLanguage('en', 'CA')}" href="#"></b:navCommandLink>
+                <b:navCommandLink value="FR" action="#{localeBean.setLanguage('fr', 'CA')}" href="#"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+    </h:form>
+
+
+</ui:composition>

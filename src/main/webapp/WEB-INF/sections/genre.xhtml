@@ -1,0 +1,68 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!--AUTHOR: Frank Birikundavyi-->
+    <div class="container">
+        <div class="genre-music">
+            <div class="top-search">
+                
+            </div>
+            <div class="title-black">
+                #{msgs.BrowseAlbumBy}
+                <span>#{msgs.genres}</span>
+            </div>
+            <ul class="genres-list">
+                <h:form>
+                    <li>
+                        <h:commandLink action="#{genreAction.findAllAlbums()}">
+                             #{msgs.all}
+                             <f:actionListener rendered="result"/>
+                        </h:commandLink>
+                    </li>
+                
+                <ui:repeat var="g" value="#{genreBacking.allGenres}">
+                    <li>
+                        <h:commandLink action="#{genreAction.findAllAlbumsByGenre(g.genreName)}">
+                            #{g.genreName}
+                            <f:actionListener rendered="result" />
+                        </h:commandLink>
+                    </li>
+                </ui:repeat>
+                </h:form>
+            </ul>
+            
+            <div id="result">
+                <ui:repeat var="a" value="#{genreAction.result}">
+                    <div class="search-main">
+                        <ul class="post-list">
+                            <li>
+                                <div class="post-one">
+                                    <span class="cover" >
+                                        <h:graphicImage class="img-responsive"  value="#{a.albumCover}"/>
+                                    </span>
+                                    <div class="cover-info">
+                                        <div class="title">
+                                            <h:link outcome="albumPage" value="#{a.albumTitle}">
+                                                <f:param value="#{a.id}" name="albumId"/>
+                                            </h:link>
+                                        </div>
+                                        <div>#{a.artistId.artist}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </ui:repeat>
+                
+            </div>
+        </div>     
+    </div>
+
+
+</ui:composition>

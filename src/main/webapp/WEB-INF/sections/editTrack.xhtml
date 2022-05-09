@@ -1,0 +1,102 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui" >
+
+    <!-- Author: Seaim Khan -->    
+    <h:form id="form" enctype="multipart/form-data">
+        <p:panel id="panel" header="#{msgs.editTrackHead}" >
+            <h:panelGrid id="createTrackGrid" columns="3" cellpadding="1">
+                <p:outputLabel for="trackTitle" value="#{msgs.trackTitleHead}" />
+                <p:inputText id="trackTitle" required="true" value="#{album.trackTitle}" type="text" placeholder="#{msgs.trackTitle}">
+                    <f:validateLength maximum="255" />
+                </p:inputText>
+                <p:message for="trackTitle" />
+
+                <p:outputLabel for="trackSingleOrSong" value="#{msgs.singleCheck}" />
+                <p:selectBooleanCheckbox disabled="true" id="trackSingleOrSong" value="#{album.singleSong}">
+                    <p:ajax process="trackSingleOrSong" update="trackAlbum trackNumInAlbum trackLabel albumRelease albumCover" />                   
+                </p:selectBooleanCheckbox>
+                <p:message for="trackSingleOrSong" />
+
+                <p:outputLabel for="trackAlbum" value="#{msgs.albumTitleHead}" />
+                <p:autoComplete id="trackAlbum" required="#{album.singleSong == 'false'}" value="#{album.album}" disabled="#{album.singleSong == 'true'}" completeMethod="#{theAlbums.completeAlbum}" placeholder="#{msgs.albumTitle}" 
+                                converter="#{albumNameConverter}"  var="al" itemLabel="#{al.albumTitle}" itemValue="#{al}" />
+                <p:message for="trackAlbum" />
+
+                <p:outputLabel for="trackNumInAlbum" value="#{msgs.trackNumHead}" />
+                <p:inputText type="number" id="trackNumInAlbum" required="#{album.singleSong == 'false'}" value="#{album.trackNumber}" placeholder="#{msgs.trackNum}" disabled="#{album.singleSong == 'true'}">
+                    <f:validateLongRange minimum = "1" maximum="#{album.maxTrackCount}" />
+                </p:inputText>
+                <p:message for="trackNumInAlbum" />
+
+                <p:outputLabel for="trackArtist" value="#{msgs.artistHead}" />
+                <p:autoComplete id="trackArtist" required="#{album.singleSong == 'true'}" value="#{album.artist}" completeMethod="#{theArtists.completeArtist}" placeholder="#{msgs.ArtistLabel}" 
+                                converter="#{artistNameConverter}" var="a" itemLabel="#{a.artist}" itemValue="#{a}" />
+                <p:message for="trackArtist" />
+
+                <p:outputLabel for="trackLabel" value="#{msgs.recLabelHead}" />
+                <p:autoComplete id="trackLabel" required="#{album.singleSong == 'true'}" value="#{album.recordingLabels}" completeMethod="#{theLabels.completeLabel}" placeholder="#{msgs.labelName}"
+                                converter="#{labelNameConverter}" disabled="#{album.singleSong == 'false'}" var="l" itemLabel="#{l.labelName}" itemValue="#{l}"/>
+                <p:message for="trackLabel" />
+
+                <p:outputLabel for="albumRelease" value="#{msgs.relDateHead}" />
+                <p:calendar id="albumRelease" required="#{album.singleSong == 'true'}" value="#{album.releaseDate}" pattern="MM-dd-yyyy" mask="true" disabled="#{album.singleSong == 'false'}" />
+                <p:message for="albumRelease"/>           
+
+                <p:outputLabel for="albumCover" value="#{msgs.albumCvrHead}" />
+                <p:fileUpload id="albumCover" disabled="#{album.singleSong == 'false'}" fileUploadListener="#{album.handleFileUpload}" auto="true"
+                              update="messages" sizeLimit="100000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|jpg|png)$/" />
+                <p:message for="albumCover" />
+
+                <p:outputLabel for="trackTime" value="#{msgs.songLenHead}" />
+                <p:calendar id="trackTime" required="true" value="#{album.songLength}" pattern="HH:mm:ss" mask="true" timeOnly="true"/>
+                <p:message for="trackTime" />
+
+                <p:outputLabel for="trackGenre" value="#{msgs.genreHead}" />
+                <p:autoComplete id="trackGenre" required="true" value="#{album.genre}" completeMethod="#{theGenres.completeGenre}" placeholder="#{msgs.genreName}" 
+                                converter="#{genreNameConverter}" var="g" itemLabel="#{g.genreName}" itemValue="#{g}" />
+                <p:message for="trackGenre" />
+
+                <p:outputLabel for="trackCostPrice" value="#{msgs.cPriceHead}" />
+                <p:inputNumber id="trackCostPrice" required="true" value="#{album.costPrice}" placeholder="0.00" />
+                <p:message for="trackCostPrice" />
+
+                <p:outputLabel for="listPrice" value="#{msgs.lPriceHead}" />
+                <p:inputNumber id="listPrice" required="true" value="#{album.listPrice}" placeholder="0.00"/>
+                <p:message for="listPrice" />
+
+                <p:outputLabel for="salePrice" value="#{msgs.sPriceHead}" />
+                <p:inputNumber id="salePrice" value="#{album.salePrice}" placeholder="0.00" minValue="0.00">
+                    <f:validator validatorId="com.trouble.SalePriceValidator" />
+                </p:inputNumber>
+                <p:message for="salePrice" />
+
+                <p:outputLabel for="trackRemovalStatus" value="#{msgs.remStatHead}" />
+                <p:selectOneRadio required="true" id="trackRemovalStatus" value="#{album.removalStatus}">
+                    <f:selectItem itemLabel="#{msgs.trueSelect}" itemValue="true" />
+                    <f:selectItem itemLabel="#{msgs.falseSelect}" itemValue="false" />
+                    <p:ajax process="@this" update="trackRemove" />
+                </p:selectOneRadio>
+                <p:message for="trackRemovalStatus" />
+
+                <p:outputLabel for="trackRemove" value="#{msgs.remDateHead}" />
+                <p:calendar id="trackRemove" value="#{album.removalDate}" mindate="#{album.currentDate}" pattern="MM-dd-yyyy" mask="true" 
+                            required="#{album.removalStatus == 'true'}" disabled="#{album.removalStatus == 'false'}" />
+                <p:message for="trackRemove" />
+            </h:panelGrid>
+            <p:commandButton value="#{msgs.edit}" action="#{album.editTrack()}">
+                <p:confirm header="#{msgs.conf}" message="#{msgs.editTrackConf}" icon="ui-icon-alert" />
+            </p:commandButton>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"/>
+        <p:growl id="messages" showDetail="true" />
+    </h:form>
+</ui:composition>

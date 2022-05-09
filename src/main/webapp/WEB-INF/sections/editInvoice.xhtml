@@ -1,0 +1,62 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <!-- Author: Seaim Khan -->
+    <h:form id="form">
+        <p:panel id="panel" header="#{msgs.editInvoiceHead}">
+            <h:panelGrid id="editInvoiceGrid" columns="3" cellpadding="1">
+                <p:outputLabel for="clientName" value="#{msgs.clientName}" />
+                <p:autoComplete id="clientName" required="true" value="#{invoice.clientId}" completeMethod="#{theUsers.completeUser}" placeholder="#{msgs.clientName}"
+                                converter="#{userNameConverter}" var="u" itemLabel="#{u.email}" itemValue="#{u}"/>
+                <p:message for="clientName" />
+
+                <p:outputLabel for="saleDate" value="#{msgs.sDateHead}" />
+                <p:calendar id="saleDate" required="true" value="#{invoice.saleDate}" mindate="#{invoice.saleDate}" pattern="MM-dd-yyyy" mask="true" />
+                <p:message for="saleDate" />
+
+                <p:outputLabel for="grossValue" value="#{msgs.grossValueHead}" />
+                <p:inputNumber id="grossValue" required="true" placeholder="0.00" value="#{invoice.grossValue}"/>
+                <p:message for="grossValue" />
+
+                <p:outputLabel for="pst" value="#{msgs.pstHead}" />
+                <p:inputNumber id="pst" readonly="true" value="#{invoice.pst}"/>
+                <p:message for="pst" />
+
+                <p:outputLabel for="gst" value="#{msgs.gstHead}" />
+                <p:inputNumber id="gst" readonly="true" value="#{invoice.gst}"/>
+                <p:message for="gst" />
+
+                <p:outputLabel for="hst" value="#{msgs.hstHead}" />
+                <p:inputNumber id="hst" readonly="true" value="#{invoice.hst}"/>
+                <p:message for="hst" />
+
+                <p:outputLabel for="netValue" value="#{msgs.netValueHead}" />
+                <p:inputNumber id="netValue" required="true" placeholder="0.00" value="#{invoice.netValue}"/>
+                <p:message for="netValue" />
+
+                <p:outputLabel for="removed" value="#{msgs.removeCheck}" />
+                <p:selectBooleanCheckbox id="removed" value="#{invoice.removed}">
+                    <p:ajax process="removed" update="songList" />                   
+                </p:selectBooleanCheckbox>
+                <p:message for="removed" />
+
+                <p:outputLabel for="songList" value="#{msgs.songListHead}" />
+                <p:pickList id="songList" value="#{invoice.songs}" disabled="#{invoice.removed == 'true'}" 
+                            var="songs" itemLabel="#{songs.inventoryId.trackTitle}" itemValue="#{songs}" converter="pickListEntityConverter" />            
+                <p:message for="songList" />
+            </h:panelGrid>
+            <p:commandButton value="#{msgs.edit}" action="#{invoice.editInvoice()}">
+                <p:confirm header="#{msgs.conf}" message="#{msgs.editInvoiceConf}" icon="ui-icon-alert" />
+            </p:commandButton>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="#{msgs.yesConf}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{msgs.noConf}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:messages autoUpdate="true" />
+        </p:panel>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"/>
+    </h:form>
+</ui:composition>

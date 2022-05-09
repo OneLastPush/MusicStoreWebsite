@@ -1,0 +1,72 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <!-- Author: Seaim Khan -->    
+    <h:form id="form">
+        <p:growl id="growl" sticky="true" showDetail="true"/>
+        <p:wizard flowListener="#{surveyAction.onFlowProcess}">
+            <p:tab id="questionSelect" title="#{msgs.question}">
+                <p:panel header="#{msgs.createQuestion}">
+                    <p:messages />
+                    <h:panelGrid columns="2">
+                        <h:outputText value="#{msgs.questionHead}" />
+                        <p:inputText value="#{surveyAction.question}" required="true" label="#{msgs.question}">
+                            <f:validator binding="#{surveyQuestionValidator}" />
+                            <f:validateLength maximum="255" />
+                        </p:inputText>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+
+            <p:tab id="choiceSelect" title="#{msgs.choicesTab}">
+                <p:panel header="#{msgs.createChoices}">
+                    <p:messages />
+                    <h:panelGrid columns="2">
+                        <h:outputText value="#{msgs.choice1Head}" />
+                        <p:inputText value="#{surveyAction.choice1}" required="true" label="#{msgs.choice1}">
+                            <f:validateLength maximum="25" />
+                        </p:inputText>
+
+                        <h:outputText value="#{msgs.choice2Head}" />
+                        <p:inputText value="#{surveyAction.choice2}" required="true" label="#{msgs.choice2}">
+                            <f:validateLength maximum="25" />
+                        </p:inputText>
+
+                        <h:outputText value="#{msgs.choice3Head}" />
+                        <p:inputText value="#{surveyAction.choice3}" label="#{msgs.choice3}">
+                            <f:validateLength maximum="25" />
+                        </p:inputText>
+
+                        <h:outputText value="#{msgs.choice4Head}" />
+                        <p:inputText value="#{surveyAction.choice4}" label="#{msgs.choice4}">
+                            <f:validateLength maximum="25" />
+                        </p:inputText>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+
+            <p:tab id="confirmation" title="#{msgs.conf}">
+                <p:panel header="#{msgs.conf}">
+                    <h:panelGrid columns="1" bodyrows="3">
+                        <h:outputText value="#{msgs.questionHead}" />
+                        <h:outputText value="#{surveyAction.question}" />
+                    </h:panelGrid>
+                    <br />
+                    <h:panelGrid columns="1" bodyrows="5">
+                        <h:outputText value="#{msgs.choicesHead}" />
+                        <h:outputText value="#{surveyAction.choice1}" />
+                        <h:outputText value="#{surveyAction.choice2}" />
+                        <h:outputText value="#{surveyAction.choice3}" />
+                        <h:outputText value="#{surveyAction.choice4}" />
+                    </h:panelGrid>
+                    <p:commandButton value="#{msgs.submitBtn}" action="#{surveyAction.save()}"/>
+                </p:panel>
+            </p:tab>
+        </p:wizard>
+        <h:link value="#{msgs.backToManPage}" outcome="manager"></h:link>
+        <p:growl id="messages" showDetail="true" />
+    </h:form>
+</ui:composition>
